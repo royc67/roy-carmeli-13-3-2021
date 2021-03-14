@@ -1,7 +1,6 @@
 import React from "react";
-import PageNavbar from "../components/PageNavbar.jsx";
 import { fade, makeStyles } from "@material-ui/core/styles";
-import { Grid, Button, InputBase, Toolbar } from "@material-ui/core";
+import { Grid, Button, InputBase } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
 import {
@@ -88,12 +87,6 @@ const useStyles = makeStyles((theme) => ({
         width: "20ch",
       },
     },
-  },
-  table: {
-    minWidth: "100vmin",
-  },
-  dark: {
-    backgroundColor: "#eaeaea",
   },
 }));
 
