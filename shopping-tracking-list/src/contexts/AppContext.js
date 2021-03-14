@@ -5,6 +5,8 @@ export const AppContext = createContext();
 const ACTIONS = {
   ADD_ITEM: "addItem",
   ARCHIVE_ITEM: "archive",
+  REACTIVE_ITEM: "reactiveItem",
+  SWITCH_CURRENCY: "switchCurrency",
 };
 
 function INITIAL_STATE() {
@@ -18,6 +20,8 @@ function INITIAL_STATE() {
 }
 
 const appReducer = (state, action) => {
+  console.log(`action ${action.type} fired`, action.payload);
+  console.log("prevState", state);
   switch (action.type) {
     // add item
     case ACTIONS.ADD_ITEM:
@@ -33,6 +37,9 @@ const appReducer = (state, action) => {
         ...state,
         archivedItems: [...archivedItems, action.payload.item],
       };
+    case ACTIONS.SWITCH_CURRENCY:
+      return { ...state, currency: action.payload.newValue };
+
     default:
       return { ...state };
   }
