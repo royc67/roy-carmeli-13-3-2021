@@ -1,5 +1,6 @@
 import React from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
+import useApp from "../Hooks/useApp";
 import {
   TableHead,
   Table,
@@ -19,24 +20,7 @@ function createItem(name, store, price, dest) {
   return { name, store, price, dest };
 }
 
-const rows = [
-  createItem("Frozen yoghurt", "159", "6.0", "24"),
-  createItem("Ice cream sandwich", 237, 9.0, 37),
-  createItem("Eclair", 262, 16.0, 24),
-  createItem("Cupcake", 305, 3.7, 67),
-  createItem("Gingerbread", 356, 16.0, 49),
-  createItem("Frozen yoghurt", "159", "6.0", "24"),
-  createItem("Ice cream sandwich", 237, 9.0, 37),
-  createItem("Eclair", 262, 16.0, 24),
-  createItem("Cupcake", 305, 3.7, 67),
-  createItem("Ice cream sandwich", 237, 9.0, 37),
-  createItem("Eclair", 262, 16.0, 24),
-  createItem("Cupcake", 305, 3.7, 67),
-  createItem("Ice cream sandwich", 237, 9.0, 37),
-  createItem("Eclair", 262, 16.0, 24),
-  createItem("Cupcake", 305, 3.7, 67),
-  createItem("Ice cream sandwich", 237, 9.0, 37),
-];
+const rows = [];
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -87,8 +71,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ArchiveItems() {
+  const [state, dispatch] = useApp();
   const classes = useStyles();
 
+  console.log(state);
   function archive(item) {
     //   archive item
   }
