@@ -129,7 +129,7 @@ export default function DeliveryItems() {
             </TableHead>
             <TableBody>
               {rows.map((row, i) => (
-                <TableRow key={row.name} className={i % 2 && classes.dark}>
+                <TableRow key={row.name + i} className={i % 2 && classes.dark}>
                   <TableCell component="th" scope="row">
                     {row.name}
                   </TableCell>
