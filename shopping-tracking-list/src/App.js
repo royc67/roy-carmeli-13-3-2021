@@ -2,22 +2,33 @@ import Navbar from "./components/Navbar.jsx";
 // import useApp from "./Hooks/useApp";
 import { AppProvider } from "./contexts/AppContext";
 import PurchaseByItem from "./pages/PurchaseByItem";
-import PurchaseByStore from "./pages/PurchaseByStore";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import PurchaseByStores from "./pages/PurchaseByStores";
+import { Grid } from "@material-ui/core";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 
 function App() {
   return (
-    <div>
+    <Grid>
       <AppProvider>
         <Router>
+          <Redirect to="/purchase/byItem/delivery" />
           <Navbar />
           <Switch>
             <Route path="/purchase/byItem" component={PurchaseByItem} />
-            <Route exact path="/purchase/byStore" component={PurchaseByStore} />
+            <Route
+              exact
+              path="/purchase/byStores"
+              component={PurchaseByStores}
+            />
           </Switch>
         </Router>
       </AppProvider>
-    </div>
+    </Grid>
   );
 }
 
