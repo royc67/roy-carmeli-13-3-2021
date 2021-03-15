@@ -65,8 +65,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ArchiveItems() {
-  const [state, dispatch] = useApp();
   const classes = useStyles();
+  const [state, dispatch] = useApp();
 
   function archive(item) {
     //   archive item
