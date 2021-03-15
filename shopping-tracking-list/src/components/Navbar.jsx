@@ -21,10 +21,18 @@ function a11yProps(index) {
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
+    display: "flex",
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+  },
+  toolbar: {
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  currencySwitch: {
+    backgroundColor: "#3f51b5",
   },
 }));
 
@@ -34,19 +42,16 @@ export default function Navbar() {
   const [state, dispatch] = useApp();
 
   const handleChange = (event, newValue) => {
-    console.log(state);
     setTab(newValue);
   };
 
   return (
     <AppBar className={classes.appBar} position="static" color="primary">
-      <Toolbar>
+      <Toolbar className={classes.toolbar}>
         <Tabs
           value={tab}
           onChange={handleChange}
           indicatorColor="secondary"
-          // textColor="primary"
-          // variant="standard"
           aria-label="tabs"
         >
           <Tab
@@ -63,12 +68,12 @@ export default function Navbar() {
           />
         </Tabs>
         <BottomNavigation
+          className={classes.currencySwitch}
           value={state.currency}
           onChange={(event, newValue) => {
-            dispatch({ type: "changeCurrency", payload: { newValue } });
+            dispatch({ type: "switchCurrency", payload: { newValue } });
           }}
           showLabels
-          className={classes.root}
         >
           <BottomNavigationAction
             value="USD"
