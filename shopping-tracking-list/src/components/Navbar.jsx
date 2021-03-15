@@ -34,13 +34,18 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
   },
   currencySwitch: {
-    backgroundColor: "#a7b4ff",
+    minWidth: "100px",
+    maxWidth: "120px",
+  },
+  currencyTab: {
+    minWidth: "50%",
   },
 }));
 
 export default function Navbar() {
   const classes = useStyles();
   const [tab, setTab] = useState(0);
+  const [currencyTab, setCurrencyTab] = useState(0);
   const [state, dispatch] = useApp();
 
   const currencyInterval = useRef(0);
@@ -68,8 +73,18 @@ export default function Navbar() {
     };
   }, [dispatch]);
 
-  const handleChange = (event, newValue) => {
+  const handleRoute = (event, newValue) => {
     setTab(newValue);
+  };
+
+  const handleSwitch = (event, newValue) => {
+    setCurrencyTab(newValue);
+  };
+
+  const switchCurrency = (e) => {
+    const newValue = e.target.innerText;
+    if (state.currency !== newValue)
+      dispatch({ type: "switchCurrency", payload: { newValue } });
   };
 
   return (
@@ -77,7 +92,7 @@ export default function Navbar() {
       <Toolbar className={classes.toolbar}>
         <Tabs
           value={tab}
-          onChange={handleChange}
+          onChange={handleRoute}
           indicatorColor="secondary"
           aria-label="tabs"
         >
@@ -94,25 +109,29 @@ export default function Navbar() {
             to="/purchase/byStores"
           />
         </Tabs>
-        <BottomNavigation
+        <Tabs
           className={classes.currencySwitch}
-          value={state.currency}
-          onChange={(event, newValue) => {
-            dispatch({ type: "switchCurrency", payload: { newValue } });
-          }}
-          showLabels
+          value={currencyTab}
+          onChange={handleSwitch}
+          indicatorColor="secondary"
+          aria-label="currency-switch"
         >
-          <BottomNavigationAction
+          <Tab
+            className={classes.currencyTab}
             value="USD"
             label="USD"
-            icon={<Currency code="USD" size="small" />}
+            {...a11yProps(0)}
+            onClick={switchCurrency}
+            wrapped
           />
-          <BottomNavigationAction
+          <Tab
+            className={classes.currencyTab}
             value="ILS"
             label="ILS"
-            icon={<Currency code="ILS" size="small" />}
+            {...a11yProps(1)}
+            onClick={switchCurrency}
           />
-        </BottomNavigation>
+        </Tabs>
       </Toolbar>
     </AppBar>
   );
