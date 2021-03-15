@@ -15,16 +15,7 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
 import AddItem from "./AddItem";
-
-function createItem(name, store, price, dest) {
-  return { name, store, price, dest };
-}
-
-const rows = [
-  createItem("Frozen yoghurt", "159", "6.0", "24"),
-  createItem("Frozen yoghurt", "159", "6.0", "24"),
-  createItem("Frozen yoghurt", "159", "6.0", "24"),
-];
+import useApp from "../Hooks/useApp";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -75,10 +66,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DeliveryItems() {
   const classes = useStyles();
+  const [state, dispatch] = useApp();
   const [openModal, setOpenModal] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState("");
 
-  function archive(item) {
-    //   archive item
+  function archiveItem(itemID) {
+    dispatch({ type: "archiveItem", payload: { itemID } });
   }
 
   return (
@@ -106,6 +99,9 @@ export default function DeliveryItems() {
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
+              onChange={(e) => {
+                setSearchKeyword(e.target.value);
+              }}
             />
           </div>
           <Button
@@ -132,25 +128,34 @@ export default function DeliveryItems() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row, i) => (
-                <TableRow key={row.name + i} className={i % 2 && classes.dark}>
-                  <TableCell component="th" scope="row">
-                    {row.name}
-                  </TableCell>
-                  <TableCell align="right">{row.store}</TableCell>
-                  <TableCell align="right">{row.price}</TableCell>
-                  <TableCell align="right">{row.dest}</TableCell>
-                  <TableCell align="right">
-                    <Button
-                      label="archive"
-                      color="primary"
-                      onClick={() => archive(row)}
-                    >
-                      Archive
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {state.deliveryItems
+                .filter((row) => row.itemName.includes(searchKeyword))
+                .map((row, i) => (
+                  <TableRow
+                    key={row.name + i}
+                    className={i % 2 && classes.dark}
+                  >
+                    <TableCell component="th" scope="row">
+                      {row.itemName}
+                    </TableCell>
+                    <TableCell align="right">{row.store}</TableCell>
+                    <TableCell align="right">
+                      {state.currency === "USD"
+                        ? row.price
+                        : row.price * state.converter}
+                    </TableCell>
+                    <TableCell align="right">{row.dest}</TableCell>
+                    <TableCell align="right">
+                      <Button
+                        label="archive"
+                        color="primary"
+                        onClick={() => archiveItem(row.id)}
+                      >
+                        Archive
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
