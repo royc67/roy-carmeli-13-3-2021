@@ -67,7 +67,7 @@ const STORE_OPTIONS = [
 
 export default function AddItem({ open, setOpen }) {
   const classes = useStyles();
-  const [state, dispatch] = useApp();
+  const dispatch = useApp()[1];
   const [itemOptions, setItemOptions] = useState([]);
   const [values, setValues] = useState(EMPTY_FORM());
 
@@ -75,7 +75,15 @@ export default function AddItem({ open, setOpen }) {
     setOpen(false);
   }
 
-  const handleChange = (prop) => (event) => {
+  useEffect(() => {
+    setValues(EMPTY_FORM());
+  }, [open]);
+
+  const handleAutoComplete = (prop) => (event) => {
+    setValues({ ...values, [prop]: event.target.innerText });
+  };
+
+  const updateValues = (prop) => (event) => {
     //   input validation and limit
     switch (prop) {
       case "price":
@@ -125,12 +133,14 @@ export default function AddItem({ open, setOpen }) {
                 className={classes.margin}
                 id="item-name-input"
                 freeSolo
+                onInputChange={handleAutoComplete("itemName")}
                 options={itemOptions.map((option) => option.title)}
                 renderInput={(params) => (
                   <TextField
                     {...params}
+                    id="item-name-input"
                     value={values.itemName}
-                    onChange={handleChange("itemName")}
+                    onChange={updateValues("itemName")}
                     label="item name"
                     margin="normal"
                     variant="outlined"
@@ -142,13 +152,15 @@ export default function AddItem({ open, setOpen }) {
               <Autocomplete
                 className={classes.margin}
                 id="store-name-input"
-                freeSolo
                 options={STORE_OPTIONS}
+                onInputChange={handleAutoComplete("store")}
+                freeSolo
                 renderInput={(params) => (
                   <TextField
+                    id="store-input"
                     {...params}
                     value={values.store}
-                    onChange={handleChange("store")}
+                    onChange={updateValues("store")}
                     label="store"
                     margin="normal"
                     variant="outlined"
@@ -165,7 +177,7 @@ export default function AddItem({ open, setOpen }) {
               <OutlinedInput
                 id="outlined-adornment-amount"
                 value={values.price}
-                onChange={handleChange("price")}
+                onChange={updateValues("price")}
                 startAdornment={
                   <InputAdornment position="start">$</InputAdornment>
                 }
@@ -178,7 +190,7 @@ export default function AddItem({ open, setOpen }) {
                 label="delivery-estimate"
                 type="date"
                 value={values.dest}
-                onChange={handleChange("dest")}
+                onChange={updateValues("dest")}
                 InputLabelProps={{
                   shrink: true,
                 }}
