@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import useApp from "../Hooks/useApp";
 import {
@@ -67,8 +67,10 @@ const useStyles = makeStyles((theme) => ({
 export default function ArchiveItems() {
   const classes = useStyles();
   const [state, dispatch] = useApp();
+  const [searchKeyword, setSearchKeyword] = useState("");
 
-  function archive(item) {
+  function reActivateItem(itemID) {
+    dispatch({ type: "reactiveItem", payload: { itemID } });
     //   archive item
   }
 
@@ -97,6 +99,9 @@ export default function ArchiveItems() {
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
+              onChange={(e) => {
+                setSearchKeyword(e.target.value);
+              }}
             />
           </div>
         </Grid>
@@ -112,25 +117,31 @@ export default function ArchiveItems() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {state.archiveItems.map((row, i) => (
-                <TableRow key={row.id} className={i % 2 && classes.dark}>
-                  <TableCell component="th" scope="row">
-                    {row.name}
-                  </TableCell>
-                  <TableCell align="right">{row.store}</TableCell>
-                  <TableCell align="right">{row.price}</TableCell>
-                  <TableCell align="right">{row.dest}</TableCell>
-                  <TableCell align="right">
-                    <Button
-                      label="remove"
-                      color="primary"
-                      onClick={() => archive(row)}
-                    >
-                      reactive
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {state.archiveItems
+                .filter((row) => row.itemName.includes(searchKeyword))
+                .map((row, i) => (
+                  <TableRow key={row.id} className={i % 2 && classes.dark}>
+                    <TableCell component="th" scope="row">
+                      {row.itemName}
+                    </TableCell>
+                    <TableCell align="right">{row.store}</TableCell>
+                    <TableCell align="right">
+                      {state.currency === "USD"
+                        ? row.price
+                        : row.price * state.converter}
+                    </TableCell>
+                    <TableCell align="right">{row.dest}</TableCell>
+                    <TableCell align="right">
+                      <Button
+                        label="remove"
+                        color="primary"
+                        onClick={() => reActivateItem(row.id)}
+                      >
+                        reactive
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
