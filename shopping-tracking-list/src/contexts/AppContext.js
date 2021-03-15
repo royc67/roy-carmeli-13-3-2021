@@ -20,8 +20,7 @@ function INITIAL_STATE() {
 }
 
 const appReducer = (state, action) => {
-  console.log(`action ${action.type} fired`, action.payload);
-  console.log("prevState", state);
+  console.log(`action ${action.type} fired`, action.payload.newValue);
   switch (action.type) {
     // add item
     case ACTIONS.ADD_ITEM:
@@ -39,7 +38,6 @@ const appReducer = (state, action) => {
       };
     case ACTIONS.SWITCH_CURRENCY:
       return { ...state, currency: action.payload.newValue };
-
     default:
       return { ...state };
   }
