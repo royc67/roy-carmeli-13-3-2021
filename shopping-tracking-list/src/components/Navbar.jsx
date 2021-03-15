@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Tab,
@@ -9,6 +9,8 @@ import {
   BottomNavigationAction,
 } from "@material-ui/core";
 import Currency from "react-currency-icons";
+// import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
+
 import { Link } from "react-router-dom";
 import useApp from "../Hooks/useApp";
 
@@ -32,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
   },
   currencySwitch: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: "#a7b4ff",
   },
 }));
 
@@ -44,6 +46,26 @@ export default function Navbar() {
   const handleChange = (event, newValue) => {
     setTab(newValue);
   };
+
+  let currencyInterval;
+
+  useEffect(() => {
+    currencyInterval = setInterval(() => {
+      console.log(state);
+      fetch("https://api.exchangeratesapi.io/latest?base=USD")
+        .then((res) => res.json())
+        .then((json) =>
+          dispatch({
+            type: "updateConverter",
+            payload: { newValue: json.rates.ILS },
+          })
+        );
+    }, 10000);
+
+    return () => {
+      clearInterval(currencyInterval);
+    };
+  }, []);
 
   return (
     <AppBar className={classes.appBar} position="static" color="primary">
