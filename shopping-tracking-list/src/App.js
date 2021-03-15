@@ -1,5 +1,4 @@
 import Navbar from "./components/Navbar.jsx";
-// import useApp from "./Hooks/useApp";
 import { AppProvider } from "./contexts/AppContext";
 import PurchaseByItem from "./pages/PurchaseByItem";
 import PurchaseByStores from "./pages/PurchaseByStores";
