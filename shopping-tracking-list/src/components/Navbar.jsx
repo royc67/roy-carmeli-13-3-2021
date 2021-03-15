@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Tab,
@@ -43,15 +43,11 @@ export default function Navbar() {
   const [tab, setTab] = useState(0);
   const [state, dispatch] = useApp();
 
-  const handleChange = (event, newValue) => {
-    setTab(newValue);
-  };
+  const currencyInterval = useRef(0);
 
-  let currencyInterval;
-
+  // update currency rate every 10 sec
   useEffect(() => {
-    currencyInterval = setInterval(() => {
-      console.log(state);
+    const fetchCurrencyRate = () => {
       fetch("https://api.exchangeratesapi.io/latest?base=USD")
         .then((res) => res.json())
         .then((json) =>
@@ -60,12 +56,21 @@ export default function Navbar() {
             payload: { newValue: json.rates.ILS },
           })
         );
+    };
+
+    fetchCurrencyRate();
+    currencyInterval.current = setInterval(() => {
+      fetchCurrencyRate();
     }, 10000);
 
     return () => {
-      clearInterval(currencyInterval);
+      clearInterval(currencyInterval.current);
     };
-  }, []);
+  }, [dispatch]);
+
+  const handleChange = (event, newValue) => {
+    setTab(newValue);
+  };
 
   return (
     <AppBar className={classes.appBar} position="static" color="primary">
