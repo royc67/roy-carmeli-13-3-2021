@@ -7,6 +7,7 @@ const ACTIONS = {
   ARCHIVE_ITEM: "archive",
   REACTIVE_ITEM: "reactiveItem",
   SWITCH_CURRENCY: "switchCurrency",
+  UPDATE_CONVERTER: "updateConverter",
 };
 
 function INITIAL_STATE() {
@@ -14,6 +15,7 @@ function INITIAL_STATE() {
     deliveryItems: [],
     archiveItems: [],
     currency: "USD",
+    converter: 0,
   };
 
   return initialState;
@@ -36,6 +38,8 @@ const appReducer = (state, action) => {
         ...state,
         archivedItems: [...archivedItems, action.payload.item],
       };
+    case ACTIONS.UPDATE_CONVERTER:
+      return { ...state, converter: action.payload.newValue };
     case ACTIONS.SWITCH_CURRENCY:
       return { ...state, currency: action.payload.newValue };
     default:
