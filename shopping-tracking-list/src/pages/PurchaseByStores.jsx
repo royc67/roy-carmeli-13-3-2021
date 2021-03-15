@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import { Grid, InputBase } from "@material-ui/core";
 import useApp from "../Hooks/useApp";
@@ -71,6 +71,26 @@ const useStyles = makeStyles((theme) => ({
 export default function PurchaseByStores() {
   const classes = useStyles();
   const [state, dispach] = useApp();
+  const [itemsSummary, setItemsSummary] = useState([]);
+
+  useEffect(() => {
+    const stores = [];
+    const storeData = (item) => ({
+      name: item.store,
+      quantity: 1,
+      summary: parseInt(item.price),
+    });
+
+    state.deliveryItems.forEach((item) => {
+      const currentStore = stores.find((store) => store.name === item.store);
+      if (currentStore) {
+        currentStore.quantity += 1;
+        currentStore.summary += parseInt(item.price);
+      } else stores.push(storeData(item));
+    });
+
+    setItemsSummary(stores);
+  }, [state.deliveryItems]);
 
   return (
     <Grid container>
@@ -110,13 +130,13 @@ export default function PurchaseByStores() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {state.archiveItems.map((row, i) => (
+              {itemsSummary.map((row, i) => (
                 <TableRow key={row.name} className={i % 2 && classes.dark}>
                   <TableCell component="th" scope="row">
                     {row.name}
                   </TableCell>
-                  <TableCell align="right">{row.store}</TableCell>
-                  <TableCell align="right">{row.price}</TableCell>
+                  <TableCell align="right">{row.quantity}</TableCell>
+                  <TableCell align="right">{row.summary}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
