@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import {
   TableHead,
@@ -14,6 +14,7 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
+import AddItem from "./AddItem";
 
 function createItem(name, store, price, dest) {
   return { name, store, price, dest };
@@ -74,6 +75,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DeliveryItems() {
   const classes = useStyles();
+  const [openModal, setOpenModal] = useState(false);
 
   function archive(item) {
     //   archive item
@@ -111,6 +113,9 @@ export default function DeliveryItems() {
             color="primary"
             className={classes.button}
             startIcon={<AddIcon />}
+            onClick={() => {
+              setOpenModal(true);
+            }}
           >
             add Item
           </Button>
@@ -150,6 +155,7 @@ export default function DeliveryItems() {
           </Table>
         </TableContainer>
       </Grid>
+      <AddItem open={openModal} setOpen={setOpenModal} />
     </Grid>
   );
 }
