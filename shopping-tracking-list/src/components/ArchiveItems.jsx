@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme) => ({
   dark: {
     backgroundColor: "#eaeaea",
   },
+  toolBar: {
+    margin: theme.spacing(2),
+  },
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
@@ -84,6 +87,7 @@ export default function ArchiveItems() {
         alignItems="center"
       >
         <Grid
+          className={classes.toolBar}
           container
           direction="row"
           justify="space-between"
