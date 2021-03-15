@@ -16,12 +16,6 @@ import {
 // import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
 
-function createItem(name, store, price, dest) {
-  return { name, store, price, dest };
-}
-
-const rows = [];
-
 const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: "100vmin",
@@ -74,7 +68,6 @@ export default function ArchiveItems() {
   const [state, dispatch] = useApp();
   const classes = useStyles();
 
-  console.log(state);
   function archive(item) {
     //   archive item
   }
@@ -119,8 +112,8 @@ export default function ArchiveItems() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row, i) => (
-                <TableRow key={row.name} className={i % 2 && classes.dark}>
+              {state.archiveItems.map((row, i) => (
+                <TableRow key={row.id} className={i % 2 && classes.dark}>
                   <TableCell component="th" scope="row">
                     {row.name}
                   </TableCell>
