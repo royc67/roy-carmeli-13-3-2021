@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import useApp from "../Hooks/useApp";
+import classNames from "classnames";
 import {
   TableHead,
   Table,
@@ -120,7 +121,10 @@ export default function ArchiveItems() {
               {state.archiveItems
                 .filter((row) => row.itemName.includes(searchKeyword))
                 .map((row, i) => (
-                  <TableRow key={row.id} className={i % 2 && classes.dark}>
+                  <TableRow
+                    key={row.id}
+                    className={classNames({ [classes.dark]: i % 2 })}
+                  >
                     <TableCell component="th" scope="row">
                       {row.itemName}
                     </TableCell>
