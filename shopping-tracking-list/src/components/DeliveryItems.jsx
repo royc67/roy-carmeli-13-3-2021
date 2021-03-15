@@ -16,6 +16,7 @@ import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
 import AddItem from "./AddItem";
 import useApp from "../Hooks/useApp";
+import classNames from "classnames";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -132,8 +133,8 @@ export default function DeliveryItems() {
                 .filter((row) => row.itemName.includes(searchKeyword))
                 .map((row, i) => (
                   <TableRow
-                    key={row.name + i}
-                    className={i % 2 && classes.dark}
+                    key={row.id}
+                    className={classNames({ [classes.dark]: i % 2 })}
                   >
                     <TableCell component="th" scope="row">
                       {row.itemName}
@@ -160,7 +161,7 @@ export default function DeliveryItems() {
           </Table>
         </TableContainer>
       </Grid>
-      <AddItem open={openModal} setOpen={setOpenModal} />
+      {openModal && <AddItem open={openModal} setOpen={setOpenModal} />}
     </Grid>
   );
 }
