@@ -12,6 +12,7 @@ import {
   TableCell,
   TableBody,
 } from "@material-ui/core";
+import classNames from "classnames";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -72,6 +73,7 @@ export default function PurchaseByStores() {
   const classes = useStyles();
   const [state, dispach] = useApp();
   const [itemsSummary, setItemsSummary] = useState([]);
+  const [searchKeyword, setSearchKeyword] = useState("");
 
   useEffect(() => {
     const stores = [];
@@ -116,6 +118,7 @@ export default function PurchaseByStores() {
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
+              onChange={(e) => setSearchKeyword(e.target.value)}
               inputProps={{ "aria-label": "search" }}
             />
           </div>
@@ -130,15 +133,20 @@ export default function PurchaseByStores() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {itemsSummary.map((row, i) => (
-                <TableRow key={row.name} className={i % 2 && classes.dark}>
-                  <TableCell component="th" scope="row">
-                    {row.name}
-                  </TableCell>
-                  <TableCell align="right">{row.quantity}</TableCell>
-                  <TableCell align="right">{row.summary}</TableCell>
-                </TableRow>
-              ))}
+              {itemsSummary
+                .filter((store) => store.name.includes(searchKeyword))
+                .map((row, i) => (
+                  <TableRow
+                    key={row.name}
+                    className={classNames({ [classes.dark]: i & 2 })}
+                  >
+                    <TableCell component="th" scope="row">
+                      {row.name}
+                    </TableCell>
+                    <TableCell align="right">{`X${row.quantity}`}</TableCell>
+                    <TableCell align="right">{row.summary}</TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
