@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import {
   TableHead,
@@ -86,9 +86,12 @@ export default function DeliveryItems() {
     return totalTemp;
   }
 
+  useEffect(() => {
+    setTotal(calcTotal());
+  }, [state.deliveryItems.length, searchKeyword.length]);
+
   function archiveItem(itemID) {
     dispatch({ type: "archiveItem", payload: { itemID } });
-    setTotal(calcTotal());
   }
 
   return (
@@ -124,7 +127,7 @@ export default function DeliveryItems() {
           </div>
           <Button
             variant="contained"
-            color="primary"
+            color="secondary"
             className={classes.button}
             startIcon={<AddIcon />}
             onClick={() => {
@@ -138,11 +141,19 @@ export default function DeliveryItems() {
           <Table className={classes.table} aria-label="simple table">
             <TableHead>
               <TableRow className={classes.dark}>
-                <TableCell>Item name</TableCell>
-                <TableCell align="right">Store</TableCell>
-                <TableCell align="right">Price</TableCell>
-                <TableCell align="right">Delivery estimate</TableCell>
-                <TableCell align="right">Action</TableCell>
+                <TableCell style={{ minWidth: 600 }}>Item name</TableCell>
+                <TableCell style={{ minWidth: 100 }} align="right">
+                  Store
+                </TableCell>
+                <TableCell style={{ minWidth: 100 }} align="right">
+                  Price
+                </TableCell>
+                <TableCell style={{ minWidth: 100 }} align="right">
+                  Delivery estimate
+                </TableCell>
+                <TableCell style={{ minWidth: 100 }} align="right">
+                  Action
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
