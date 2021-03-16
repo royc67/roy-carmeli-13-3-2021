@@ -60,6 +60,14 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  container: {},
+  tableContainer: {
+    width: "90%",
+    margin: theme.spacing(1),
+  },
+  dark: {
+    backgroundColor: "#eaeaea",
+  },
 }));
 
 export default function ArchiveItems() {
@@ -73,7 +81,7 @@ export default function ArchiveItems() {
   }
 
   return (
-    <Grid container>
+    <Grid container className={classes.container}>
       <Grid
         container
         direction="column"
@@ -104,8 +112,8 @@ export default function ArchiveItems() {
             />
           </div>
         </Grid>
-        <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="simple table">
+        <TableContainer component={Paper} className={classes.tableContainer}>
+          <Table className={classes.table} aria-label="items-list">
             <TableHead>
               <TableRow className={classes.dark}>
                 <TableCell>Item name</TableCell>
