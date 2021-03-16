@@ -1,6 +1,5 @@
 import Navbar from "./components/Navbar.jsx";
-import { AppProvider } from "./contexts/AppContext";
-import { makeStyles } from "@material-ui/core/styles";
+
 import PurchaseByItem from "./pages/PurchaseByItem";
 import PurchaseByStores from "./pages/PurchaseByStores";
 import { Grid } from "@material-ui/core";
@@ -10,26 +9,43 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+import useApp from "./Hooks/useApp.js";
 
-const useStyles = makeStyles((theme) => ({
-  root: {},
-}));
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 function App() {
-  const classes = useStyles();
+  const [state, dispatch] = useApp();
+
+  const handleErrorClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    dispatch({ type: "error", payload: [false, ""] });
+  };
 
   return (
-    <Grid className={classes.root}>
-      <AppProvider>
-        <Router>
-          <Redirect to="/purchase/byItem/delivery" />
-          <Navbar />
-          <Switch>
-            <Route path="/purchase/byItem" component={PurchaseByItem} />
-            <Route path="/purchase/byStores" component={PurchaseByStores} />
-          </Switch>
-        </Router>
-      </AppProvider>
+    <Grid container>
+      <Router>
+        <Redirect to="/purchase/byItem/delivery" />
+        <Navbar />
+        <Switch>
+          <Route path="/purchase/byItem" component={PurchaseByItem} />
+          <Route path="/purchase/byStores" component={PurchaseByStores} />
+        </Switch>
+      </Router>
+      <Snackbar
+        open={state.error[0]}
+        autoHideDuration={6000}
+        onClose={handleErrorClose}
+      >
+        <Alert onClose={handleErrorClose} severity="error">
+          {state.error[1]}
+        </Alert>
+      </Snackbar>
     </Grid>
   );
 }
