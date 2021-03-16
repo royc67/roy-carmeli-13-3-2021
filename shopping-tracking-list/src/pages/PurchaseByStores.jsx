@@ -21,12 +21,10 @@ const useStyles = makeStyles((theme) => ({
   dark: {
     backgroundColor: "#eaeaea",
   },
-  button: {},
-  container: {},
+
   toolbar: {
-    direction: "row",
-    justifyContent: "space-beetween",
-    alignItems: "center",
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
   search: {
     position: "relative",
@@ -103,6 +101,7 @@ export default function PurchaseByStores() {
         alignItems="center"
       >
         <Grid
+          className={classes.toolbar}
           container
           direction="row"
           justify="space-between"
