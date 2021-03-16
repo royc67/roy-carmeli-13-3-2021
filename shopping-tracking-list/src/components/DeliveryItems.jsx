@@ -19,7 +19,8 @@ import useApp from "../Hooks/useApp";
 
 const useStyles = makeStyles((theme) => ({
   toolBar: {
-    margin: theme.spacing(2),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
   search: {
     position: "relative",
@@ -59,8 +60,14 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  tableContainer: {
+    minWidth: "450px",
+  },
   dark: {
     backgroundColor: "#eaeaea",
+  },
+  totalPrice: {
+    marginTop: theme.spacing(2),
   },
 }));
 
@@ -69,9 +76,19 @@ export default function DeliveryItems() {
   const [state, dispatch] = useApp();
   const [openModal, setOpenModal] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [total, setTotal] = useState(calcTotal());
+
+  function calcTotal() {
+    let totalTemp = 0;
+    state.deliveryItems
+      .filter((item) => item.itemName.includes(searchKeyword))
+      .forEach((item) => (totalTemp += item.price));
+    return totalTemp;
+  }
 
   function archiveItem(itemID) {
     dispatch({ type: "archiveItem", payload: { itemID } });
+    setTotal(calcTotal());
   }
 
   return (
@@ -117,7 +134,7 @@ export default function DeliveryItems() {
             add Item
           </Button>
         </Grid>
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} className={classes.tableContainer}>
           <Table className={classes.table} aria-label="simple table">
             <TableHead>
               <TableRow className={classes.dark}>
@@ -157,6 +174,12 @@ export default function DeliveryItems() {
             </TableBody>
           </Table>
         </TableContainer>
+        <Grid item xs={4} className={classes.totalPrice}>
+          Total:{" "}
+          {state.currency === "USD"
+            ? `${total.toFixed(2)}$`
+            : `${(total * state.converter).toFixed(2)}₪`}
+        </Grid>
       </Grid>
       {openModal && <AddItem open={openModal} setOpen={setOpenModal} />}
     </Grid>
