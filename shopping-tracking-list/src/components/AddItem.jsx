@@ -84,10 +84,12 @@ export default function AddItem({ open, setOpen }) {
   };
 
   const updateValues = (prop) => (event) => {
+    let newValue = event.target.value;
     //   input validation and limit
     switch (prop) {
       case "price":
         if (isNaN(event.target.value)) return;
+        newValue = parseInt(newValue);
         break;
       case "date":
         break;
@@ -96,7 +98,7 @@ export default function AddItem({ open, setOpen }) {
         break;
     }
     if (prop === "price" && isNaN(event.target.value)) return;
-    setValues({ ...values, [prop]: event.target.value });
+    setValues({ ...values, [prop]: newValue });
   };
 
   function submit() {
@@ -170,7 +172,7 @@ export default function AddItem({ open, setOpen }) {
             </FormControl>
           </div>
           <div className={classes.row}>
-            <FormControl className={classes.field} variant="outlined" required>
+            <FormControl required className={classes.field} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-amount">
                 Amount
               </InputLabel>
