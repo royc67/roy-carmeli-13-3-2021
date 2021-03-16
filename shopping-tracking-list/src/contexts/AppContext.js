@@ -9,12 +9,14 @@ const ACTIONS = {
   REACTIVE_ITEM: "reactiveItem",
   SWITCH_CURRENCY: "switchCurrency",
   UPDATE_CONVERTER: "updateConverter",
+  ERROR: "error",
 };
 
 function INITIAL_STATE() {
   const storagedDeliveryItems = ls.get("deliveryItems");
   const storagedArchiveItems = ls.get("archiveItems");
   const initialState = {
+    error: [false, ""],
     deliveryItems: storagedDeliveryItems
       ? JSON.parse(storagedDeliveryItems)
       : [],
@@ -39,7 +41,10 @@ const appReducer = (state, action) => {
     // add item
     case ACTIONS.ADD_ITEM:
       const id = uuidv4();
-      const newItem = { ...action.payload.item, id };
+      const newItem = {
+        ...action.payload.item,
+        id,
+      };
       const { deliveryItems } = state;
       newDeliveryItems = [...deliveryItems, newItem].sort(compareDates);
 
@@ -90,6 +95,11 @@ const appReducer = (state, action) => {
       if (["USD", "ILS"].includes(action.payload.newValue))
         return { ...state, currency: action.payload.newValue };
       break;
+
+    // error handler
+    case ACTIONS.ERROR:
+      return { ...state, error: action.payload };
+
     default:
       break;
   }
