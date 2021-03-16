@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import useApp from "../Hooks/useApp";
-import classNames from "classnames";
+
 import {
   TableHead,
   Table,
@@ -14,16 +14,10 @@ import {
   Grid,
   InputBase,
 } from "@material-ui/core";
-// import AddIcon from "@material-ui/icons/Add";
+
 import SearchIcon from "@material-ui/icons/Search";
 
 const useStyles = makeStyles((theme) => ({
-  table: {
-    minWidth: "100vmin",
-  },
-  dark: {
-    backgroundColor: "#eaeaea",
-  },
   toolBar: {
     margin: theme.spacing(2),
   },
@@ -125,18 +119,15 @@ export default function ArchiveItems() {
               {state.archiveItems
                 .filter((row) => row.itemName.includes(searchKeyword))
                 .map((row, i) => (
-                  <TableRow
-                    key={row.id}
-                    className={classNames({ [classes.dark]: i % 2 })}
-                  >
+                  <TableRow key={row.id}>
                     <TableCell component="th" scope="row">
                       {row.itemName}
                     </TableCell>
                     <TableCell align="right">{row.store}</TableCell>
                     <TableCell align="right">
                       {state.currency === "USD"
-                        ? row.price
-                        : row.price * state.converter}
+                        ? `${row.price.toFixed(2)}$`
+                        : `${(row.price * state.converter).toFixed(2)}₪`}
                     </TableCell>
                     <TableCell align="right">{row.dest}</TableCell>
                     <TableCell align="right">
