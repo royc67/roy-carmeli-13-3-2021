@@ -4,16 +4,16 @@ import {
   Fade,
   Modal,
   TextField,
-  FormControl,
-  OutlinedInput,
-  InputLabel,
   InputAdornment,
   Button,
+  Grid,
+  Typography,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import AddIcon from "@material-ui/icons/Add";
 import { useEffect, useState } from "react";
 import useApp from "../Hooks/useApp";
+import classNames from "classnames";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -24,32 +24,30 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     width: "50vmin",
     backgroundColor: theme.palette.background.paper,
-    // border: "2px solid white",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-    display: "flex",
-    flexDirection: "column",
+    minHeight: "300px",
+    minWidth: "280px",
   },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
+  padding: {
+    margin: theme.spacing(1),
   },
   margin: {
     margin: theme.spacing(1),
   },
-  row: {
-    display: "flex",
-    justifyContent: "space-between",
-  },
-  field: {
-    width: "40%",
-    margin: theme.spacing(1),
+  dateInput: {
+    maxWidth: "100%",
   },
 }));
 
 const today = () => new Date().toISOString().split("T")[0].split("-").join("-");
 
-const EMPTY_FORM = () => ({ itemName: "", store: "", price: 0, dest: today() });
+const EMPTY_FORM = () => ({
+  itemName: "",
+  store: "",
+  price: "",
+  dest: today(),
+});
 
 const STORE_OPTIONS = [
   "ebay",
@@ -85,11 +83,13 @@ export default function AddItem({ open, setOpen }) {
 
   const updateValues = (prop) => (event) => {
     let newValue = event.target.value;
+
     //   input validation and limit
     switch (prop) {
       case "price":
         if (isNaN(event.target.value)) return;
-        newValue = parseInt(newValue);
+        if (!newValue[newValue.length - 1] === ".")
+          newValue = parseFloat(newValue) ? parseFloat(newValue) : "";
         break;
       case "date":
         break;
@@ -97,14 +97,18 @@ export default function AddItem({ open, setOpen }) {
         if (event.target.value.length > 100) return;
         break;
     }
-    if (prop === "price" && isNaN(event.target.value)) return;
+
     setValues({ ...values, [prop]: newValue });
   };
 
-  function submit() {
-    dispatch({ type: "addItem", payload: { item: values } });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch({
+      type: "addItem",
+      payload: { item: { ...values, price: parseFloat(values.price) } },
+    });
     setOpen(false);
-  }
+  };
 
   // auto Complete
   useEffect(() => {
@@ -127,10 +131,12 @@ export default function AddItem({ open, setOpen }) {
       }}
     >
       <Fade in={open}>
-        <div className={classes.paper}>
-          <h2 id="add-item-title">Add Item</h2>
-          <div className={classes.row}>
-            <FormControl required className={classes.field}>
+        <form onSubmit={handleSubmit}>
+          <Grid container justify="center" className={classes.paper}>
+            <Typography variant="h5" gutterBottom>
+              Add Item
+            </Typography>
+            <Grid item xs={12}>
               <Autocomplete
                 className={classes.margin}
                 id="item-name-input"
@@ -146,11 +152,13 @@ export default function AddItem({ open, setOpen }) {
                     label="item name"
                     margin="normal"
                     variant="outlined"
+                    required
                   />
                 )}
               />
-            </FormControl>
-            <FormControl required className={classes.field}>
+            </Grid>
+
+            <Grid item xs={12}>
               <Autocomplete
                 className={classes.margin}
                 id="store-name-input"
@@ -166,49 +174,58 @@ export default function AddItem({ open, setOpen }) {
                     label="store"
                     margin="normal"
                     variant="outlined"
+                    required
                   />
                 )}
               />
-            </FormControl>
-          </div>
-          <div className={classes.row}>
-            <FormControl required className={classes.field} variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-amount">
-                Amount
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-amount"
-                value={values.price}
-                onChange={updateValues("price")}
-                startAdornment={
-                  <InputAdornment position="start">$</InputAdornment>
-                }
-                labelWidth={60}
-              />
-            </FormControl>
-            <FormControl required className={classes.field}>
-              <TextField
-                id="delivery-estimate-input"
-                label="delivery-estimate"
-                type="date"
-                value={values.dest}
-                onChange={updateValues("dest")}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            </FormControl>
-          </div>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            startIcon={<AddIcon />}
-            onClick={submit}
-          >
-            add
-          </Button>
-        </div>
+            </Grid>
+
+            <Grid container xs={12}>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  className={classes.margin}
+                  label="amount"
+                  id="amount-input"
+                  onChange={updateValues("price")}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">$</InputAdornment>
+                    ),
+                  }}
+                  variant="outlined"
+                  required
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={8}>
+                <TextField
+                  className={classNames(classes.margin, classes.dateInput)}
+                  id="delivery-estimate-input"
+                  label="delivery estimate"
+                  type="date"
+                  value={values.dest}
+                  onChange={updateValues("dest")}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  variant="outlined"
+                  required
+                />
+              </Grid>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                startIcon={<AddIcon />}
+              >
+                add
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
       </Fade>
     </Modal>
   );
