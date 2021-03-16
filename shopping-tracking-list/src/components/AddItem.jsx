@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     minHeight: "300px",
-    minWidth: "280px",
+    minWidth: "380px",
   },
   padding: {
     margin: theme.spacing(1),
@@ -37,6 +37,10 @@ const useStyles = makeStyles((theme) => ({
   },
   dateInput: {
     maxWidth: "100%",
+  },
+  buttonContainer: {
+    display: "flex",
+    justifyContent: "center",
   },
 }));
 
@@ -231,11 +235,11 @@ export default function AddItem({ open, setOpen }) {
               </Grid>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item xs={12} className={classes.buttonContainer}>
               <Button
                 type="submit"
                 variant="contained"
-                color="primary"
+                color="secondary"
                 startIcon={<AddIcon />}
               >
                 add
