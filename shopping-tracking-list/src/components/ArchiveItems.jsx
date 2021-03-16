@@ -19,7 +19,8 @@ import SearchIcon from "@material-ui/icons/Search";
 
 const useStyles = makeStyles((theme) => ({
   toolBar: {
-    margin: theme.spacing(2),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
   search: {
     position: "relative",
@@ -49,7 +50,6 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -60,13 +60,11 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
-  container: {},
-  tableContainer: {
-    width: "90%",
-    margin: theme.spacing(1),
-  },
   dark: {
     backgroundColor: "#eaeaea",
+  },
+  totalPrice: {
+    marginTop: theme.spacing(2),
   },
 }));
 
@@ -74,10 +72,19 @@ export default function ArchiveItems() {
   const classes = useStyles();
   const [state, dispatch] = useApp();
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [total, setTotal] = useState(calcTotal());
+
+  function calcTotal() {
+    let totalTemp = 0;
+    state.archiveItems
+      .filter((item) => item.itemName.includes(searchKeyword))
+      .forEach((item) => (totalTemp += item.price));
+    return totalTemp;
+  }
 
   function reActivateItem(itemID) {
     dispatch({ type: "reactiveItem", payload: { itemID } });
-    //   archive item
+    setTotal(calcTotal());
   }
 
   return (
@@ -89,8 +96,8 @@ export default function ArchiveItems() {
         alignItems="center"
       >
         <Grid
-          className={classes.toolBar}
           container
+          className={classes.toolBar}
           direction="row"
           justify="space-between"
           alignItems="stretch"
@@ -152,6 +159,12 @@ export default function ArchiveItems() {
             </TableBody>
           </Table>
         </TableContainer>
+        <Grid item xs={4} className={classes.totalPrice}>
+          Total:{" "}
+          {state.currency === "USD"
+            ? `${total.toFixed(2)}$`
+            : `${(total * state.converter).toFixed(2)}₪`}
+        </Grid>
       </Grid>
     </Grid>
   );
