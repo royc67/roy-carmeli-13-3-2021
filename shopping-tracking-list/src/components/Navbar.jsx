@@ -14,7 +14,9 @@ function a11yProps(index) {
 const useStyles = makeStyles((theme) => ({
   appBar: {
     width: "100%",
+    background: `linear-gradient(to left, ${theme.palette.primary.light}, ${theme.palette.secondary.main})`,
     display: "flex",
+    color: "white",
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
