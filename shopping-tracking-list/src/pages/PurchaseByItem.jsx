@@ -11,8 +11,14 @@ export default function PurchaseByItem() {
       <Router>
         <PageNavbar />
         <Switch>
-          <Route path="/purchase/byItem/delivery" component={DeliveryItems} />
-          <Route path="/purchase/byItem/archive" component={ArchiveItems} />
+          <Route
+            path="/roy-carmeli-13-3-2021/purchase/byItem/delivery"
+            component={DeliveryItems}
+          />
+          <Route
+            path="/roy-carmeli-13-3-2021/purchase/byItem/archive"
+            component={ArchiveItems}
+          />
         </Switch>
       </Router>
     </Grid>
