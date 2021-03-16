@@ -12,7 +12,6 @@ import {
   TableCell,
   TableBody,
 } from "@material-ui/core";
-import classNames from "classnames";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -126,19 +125,20 @@ export default function PurchaseByStores() {
           <Table className={classes.table} aria-label="simple table">
             <TableHead>
               <TableRow className={classes.dark}>
-                <TableCell>Store</TableCell>
-                <TableCell align="right">Quantity</TableCell>
-                <TableCell align="right">Total Price</TableCell>
+                <TableCell style={{ minWidth: 100 }}>Store</TableCell>
+                <TableCell style={{ minWidth: 100 }} align="right">
+                  Quantity
+                </TableCell>
+                <TableCell style={{ minWidth: 100 }} align="right">
+                  Total Price
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {itemsSummary
                 .filter((store) => store.name.includes(searchKeyword))
                 .map((row, i) => (
-                  <TableRow
-                    key={row.name}
-                    className={classNames({ [classes.dark]: i & 2 })}
-                  >
+                  <TableRow key={row.name}>
                     <TableCell component="th" scope="row">
                       {row.name}
                     </TableCell>
