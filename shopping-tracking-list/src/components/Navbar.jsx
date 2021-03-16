@@ -1,19 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  Tab,
-  Tabs,
-  AppBar,
-  Toolbar,
-  BottomNavigation,
-  BottomNavigationAction,
-} from "@material-ui/core";
-import Currency from "react-currency-icons";
-// import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
-
+import { Tab, Tabs, AppBar, Toolbar } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import useApp from "../Hooks/useApp";
-
 function a11yProps(index) {
   return {
     id: `standard-tab-${index}`,
@@ -35,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
   },
   currencySwitch: {
     minWidth: "100px",
-    maxWidth: "120px",
   },
   currencyTab: {
     minWidth: "50%",
@@ -45,13 +33,14 @@ const useStyles = makeStyles((theme) => ({
 export default function Navbar() {
   const classes = useStyles();
   const [tab, setTab] = useState(0);
-  const [currencyTab, setCurrencyTab] = useState(0);
+  const [currencyTab, setCurrencyTab] = useState("USD");
   const [state, dispatch] = useApp();
 
   const currencyInterval = useRef(0);
 
   // update currency rate every 10 sec
   useEffect(() => {
+    setCurrencyTab(state.currency);
     const fetchCurrencyRate = () => {
       fetch("https://api.exchangeratesapi.io/latest?base=USD")
         .then((res) => res.json())
@@ -71,7 +60,7 @@ export default function Navbar() {
     return () => {
       clearInterval(currencyInterval.current);
     };
-  }, [dispatch]);
+  }, [dispatch, state.currency]);
 
   const handleRoute = (event, newValue) => {
     setTab(newValue);
@@ -120,15 +109,14 @@ export default function Navbar() {
             className={classes.currencyTab}
             value="USD"
             label="USD"
-            {...a11yProps(0)}
+            {...a11yProps("USD")}
             onClick={switchCurrency}
-            wrapped
           />
           <Tab
             className={classes.currencyTab}
             value="ILS"
             label="ILS"
-            {...a11yProps(1)}
+            {...a11yProps("ILS")}
             onClick={switchCurrency}
           />
         </Tabs>
