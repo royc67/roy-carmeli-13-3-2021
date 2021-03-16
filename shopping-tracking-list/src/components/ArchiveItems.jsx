@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import useApp from "../Hooks/useApp";
 
@@ -82,6 +82,10 @@ export default function ArchiveItems() {
     return totalTemp;
   }
 
+  useEffect(() => {
+    setTotal(calcTotal());
+  }, [state.archiveItems.length, searchKeyword.length]);
+
   function reActivateItem(itemID) {
     dispatch({ type: "reactiveItem", payload: { itemID } });
     setTotal(calcTotal());
@@ -123,11 +127,19 @@ export default function ArchiveItems() {
           <Table className={classes.table} aria-label="items-list">
             <TableHead>
               <TableRow className={classes.dark}>
-                <TableCell>Item name</TableCell>
-                <TableCell align="right">Store</TableCell>
-                <TableCell align="right">Price</TableCell>
-                <TableCell align="right">Delivery estimate</TableCell>
-                <TableCell align="right">Action</TableCell>
+                <TableCell style={{ minWidth: 600 }}>Item name</TableCell>
+                <TableCell style={{ minWidth: 100 }} align="right">
+                  Store
+                </TableCell>
+                <TableCell style={{ minWidth: 100 }} align="right">
+                  Price
+                </TableCell>
+                <TableCell style={{ minWidth: 100 }} align="right">
+                  Delivery estimate
+                </TableCell>
+                <TableCell style={{ minWidth: 100 }} align="right">
+                  Action
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
