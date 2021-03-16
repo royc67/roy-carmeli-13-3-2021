@@ -32,11 +32,17 @@ function App() {
     <ThemeProvider theme={theme}>
       <Grid container>
         <Router>
-          <Redirect to="/purchase/byItem/delivery" />
+          <Redirect to="/roy-carmeli-13-3-2021/purchase/byItem/delivery" />
           <Navbar />
           <Switch>
-            <Route path="/purchase/byItem" component={PurchaseByItem} />
-            <Route path="/purchase/byStores" component={PurchaseByStores} />
+            <Route
+              path="/roy-carmeli-13-3-2021/purchase/byItem"
+              component={PurchaseByItem}
+            />
+            <Route
+              path="/roy-carmeli-13-3-2021/purchase/byStores"
+              component={PurchaseByStores}
+            />
           </Switch>
         </Router>
         <Snackbar
