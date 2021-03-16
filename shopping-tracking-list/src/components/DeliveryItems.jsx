@@ -59,6 +59,9 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  dark: {
+    backgroundColor: "#eaeaea",
+  },
 }));
 
 export default function DeliveryItems() {
