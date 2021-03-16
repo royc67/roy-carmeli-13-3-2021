@@ -99,13 +99,13 @@ export default function Navbar() {
             label="Purchase by item"
             {...a11yProps(0)}
             component={Link}
-            to="/purchase/byItem/delivery"
+            to="/roy-carmeli-13-3-2021/purchase/byItem/delivery"
           />
           <Tab
             label="Purchase by stores"
             {...a11yProps(1)}
             component={Link}
-            to="/purchase/byStores"
+            to="/roy-carmeli-13-3-2021/purchase/byStores"
           />
         </Tabs>
         <Tabs
