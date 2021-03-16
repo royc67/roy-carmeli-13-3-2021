@@ -85,7 +85,7 @@ export default function PageNavbar() {
             label="delivery"
             {...a11yProps(0)}
             component={Link}
-            to="/roy-carmeli-13-3-2021purchase/byItem/delivery"
+            to="/roy-carmeli-13-3-2021/purchase/byItem/delivery"
           />
           <Tab
             label="archive"
