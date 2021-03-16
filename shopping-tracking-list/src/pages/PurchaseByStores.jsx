@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PurchaseByStores() {
   const classes = useStyles();
-  const [state, dispach] = useApp();
+  const state = useApp()[0];
   const [itemsSummary, setItemsSummary] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
 
@@ -144,7 +144,11 @@ export default function PurchaseByStores() {
                       {row.name}
                     </TableCell>
                     <TableCell align="right">{`X${row.quantity}`}</TableCell>
-                    <TableCell align="right">{row.summary}</TableCell>
+                    <TableCell align="right">
+                      {state.currency === "USD"
+                        ? `${row.summary.toFixed(2)}$`
+                        : `${(row.summary * state.converter).toFixed(2)}₪`}
+                    </TableCell>
                   </TableRow>
                 ))}
             </TableBody>
