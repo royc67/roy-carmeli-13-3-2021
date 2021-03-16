@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Backdrop,
@@ -11,7 +12,6 @@ import {
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import AddIcon from "@material-ui/icons/Add";
-import { useEffect, useState } from "react";
 import useApp from "../Hooks/useApp";
 import classNames from "classnames";
 
@@ -63,6 +63,9 @@ const STORE_OPTIONS = [
   "Anthropologie",
 ];
 
+const FAKE_STORE_API_ERROR =
+  "Fake store API is not accessible, trying to re-connect...";
+
 export default function AddItem({ open, setOpen }) {
   const classes = useStyles();
   const dispatch = useApp()[1];
@@ -77,25 +80,19 @@ export default function AddItem({ open, setOpen }) {
     setValues(EMPTY_FORM());
   }, [open]);
 
-  const handleAutoComplete = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.innerText });
+  const handleAutoComplete = (prop) => (e) => {
+    if (e.keyCode === 13) {
+      setValues({ ...values, [prop]: e.target.defaultValue });
+    } else {
+      setValues({ ...values, [prop]: e.target.innerText });
+    }
   };
 
   const updateValues = (prop) => (event) => {
     let newValue = event.target.value;
 
-    //   input validation and limit
-    switch (prop) {
-      case "price":
-        if (isNaN(event.target.value)) return;
-        if (!newValue[newValue.length - 1] === ".")
-          newValue = parseFloat(newValue) ? parseFloat(newValue) : "";
-        break;
-      case "date":
-        break;
-      default:
-        if (event.target.value.length > 100) return;
-        break;
+    if (prop === "price" && isNaN(newValue)) {
+      return;
     }
 
     setValues({ ...values, [prop]: newValue });
@@ -103,19 +100,35 @@ export default function AddItem({ open, setOpen }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch({
-      type: "addItem",
-      payload: { item: { ...values, price: parseFloat(values.price) } },
-    });
-    setOpen(false);
+    if (!values.store || !values.itemName) {
+      const itemName = document.querySelector("#item-name-auto-complete").value;
+      const store = document.querySelector("#store-name-auto-complete").value;
+
+      dispatch({
+        type: "addItem",
+        payload: {
+          item: { ...values, price: parseFloat(values.price), store, itemName },
+        },
+      });
+      setOpen(false);
+    } else {
+      dispatch({
+        type: "addItem",
+        payload: { item: { ...values, price: parseFloat(values.price) } },
+      });
+      setOpen(false);
+    }
   };
 
   // auto Complete
   useEffect(() => {
     fetch("https://fakestoreapi.com/products")
       .then((res) => res.json())
-      .then((json) => setItemOptions(json));
-  }, []);
+      .then((json) => setItemOptions(json))
+      .catch((err) =>
+        dispatch({ type: "error", payload: [true, FAKE_STORE_API_ERROR] })
+      );
+  }, [dispatch]);
 
   return (
     <Modal
@@ -139,14 +152,15 @@ export default function AddItem({ open, setOpen }) {
             <Grid item xs={12}>
               <Autocomplete
                 className={classes.margin}
-                id="item-name-input"
+                id="item-name-auto-complete"
                 freeSolo
                 onInputChange={handleAutoComplete("itemName")}
                 options={itemOptions.map((option) => option.title)}
                 renderInput={(params) => (
                   <TextField
-                    {...params}
                     id="item-name-input"
+                    type="text"
+                    {...params}
                     value={values.itemName}
                     onChange={updateValues("itemName")}
                     label="item name"
@@ -161,13 +175,14 @@ export default function AddItem({ open, setOpen }) {
             <Grid item xs={12}>
               <Autocomplete
                 className={classes.margin}
-                id="store-name-input"
+                id="store-name-auto-complete"
                 options={STORE_OPTIONS}
                 onInputChange={handleAutoComplete("store")}
                 freeSolo
                 renderInput={(params) => (
                   <TextField
                     id="store-input"
+                    type="text"
                     {...params}
                     value={values.store}
                     onChange={updateValues("store")}
@@ -180,12 +195,14 @@ export default function AddItem({ open, setOpen }) {
               />
             </Grid>
 
-            <Grid container xs={12}>
+            <Grid container item xs={12}>
               <Grid item xs={12} sm={4}>
                 <TextField
                   className={classes.margin}
+                  type="text"
                   label="amount"
                   id="amount-input"
+                  value={values.price}
                   onChange={updateValues("price")}
                   InputProps={{
                     startAdornment: (
