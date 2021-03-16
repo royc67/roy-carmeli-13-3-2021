@@ -26,11 +26,7 @@ function App() {
           <Navbar />
           <Switch>
             <Route path="/purchase/byItem" component={PurchaseByItem} />
-            <Route
-              exact
-              path="/purchase/byStores"
-              component={PurchaseByStores}
-            />
+            <Route path="/purchase/byStores" component={PurchaseByStores} />
           </Switch>
         </Router>
       </AppProvider>
